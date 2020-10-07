@@ -1,0 +1,13 @@
+C:\Users\Mattias\Source\Repos\mattsell82\Battleships\bin\Debug\netcoreapp3.1\sänkaskepp.exe
+C:\Users\Mattias\Source\Repos\mattsell82\Battleships\bin\Debug\netcoreapp3.1\sänkaskepp.deps.json
+C:\Users\Mattias\Source\Repos\mattsell82\Battleships\bin\Debug\netcoreapp3.1\sänkaskepp.runtimeconfig.json
+C:\Users\Mattias\Source\Repos\mattsell82\Battleships\bin\Debug\netcoreapp3.1\sänkaskepp.runtimeconfig.dev.json
+C:\Users\Mattias\Source\Repos\mattsell82\Battleships\bin\Debug\netcoreapp3.1\sänkaskepp.dll
+C:\Users\Mattias\Source\Repos\mattsell82\Battleships\bin\Debug\netcoreapp3.1\sänkaskepp.pdb
+C:\Users\Mattias\Source\Repos\mattsell82\Battleships\obj\Debug\netcoreapp3.1\sänkaskepp.csprojAssemblyReference.cache
+C:\Users\Mattias\Source\Repos\mattsell82\Battleships\obj\Debug\netcoreapp3.1\sänkaskepp.AssemblyInfoInputs.cache
+C:\Users\Mattias\Source\Repos\mattsell82\Battleships\obj\Debug\netcoreapp3.1\sänkaskepp.AssemblyInfo.cs
+C:\Users\Mattias\Source\Repos\mattsell82\Battleships\obj\Debug\netcoreapp3.1\sänkaskepp.csproj.CoreCompileInputs.cache
+C:\Users\Mattias\Source\Repos\mattsell82\Battleships\obj\Debug\netcoreapp3.1\sänkaskepp.dll
+C:\Users\Mattias\Source\Repos\mattsell82\Battleships\obj\Debug\netcoreapp3.1\sänkaskepp.pdb
+C:\Users\Mattias\Source\Repos\mattsell82\Battleships\obj\Debug\netcoreapp3.1\sänkaskepp.genruntimeconfig.cache

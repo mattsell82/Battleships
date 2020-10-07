@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "sänkaskepp/1.0.0": {
+        "runtime": {
+          "sänkaskepp.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "sänkaskepp/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
