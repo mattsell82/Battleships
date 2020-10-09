@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Dynamic;
 using System.Linq;
 using System.Security.Cryptography;
 
@@ -9,60 +10,35 @@ namespace sänkaskepp
     {
         static void Main(string[] args)
         {
-            //creating player computer and adding it's ships
-            Player computer = new Player("Computer");
-            computer.GameCanvas.AddShip(1, 1);
-            computer.GameCanvas.AddShip(1, 2);
-            computer.GameCanvas.AddShip(2, 3);
-            computer.GameCanvas.AddShip(2, 4);
-            computer.GameCanvas.AddShip(3, 5);
-            computer.GameCanvas.AddShip(3, 6);
-            computer.GameCanvas.AddShip(4, 7);
 
-            //creating human player and adding it's ships
-            Console.Write("Welcome! Please enter your name: ");
-            Player player1 = new Player(Console.ReadLine());
+            Console.WriteLine("Välkommen till till sänkaskepp!");
 
-            player1.GameCanvas.AddShip(1, 1);
-            player1.GameCanvas.AddShip(1, 2);
-            player1.GameCanvas.AddShip(2, 3);
-            player1.GameCanvas.AddShip(2, 4);
-            player1.GameCanvas.AddShip(3, 5);
-            player1.GameCanvas.AddShip(3, 6);
-            player1.GameCanvas.AddShip(4, 7);
+            Console.WriteLine("Du kan göra följande val:");
+            Console.WriteLine("1. För att börja spela");
+            Console.WriteLine("2. För att få hjälp");
+            int choice = int.Parse(Console.ReadLine());
 
-            while (true)
+            
+
+            switch (choice)
             {
-                Console.WriteLine($"{player1.Name}s turn!");
-                player1.GameCanvas.PrintCanvas();
-                //Console.WriteLine(player1.GameCanvas.Score());        Print score?
-                player1.ShootingLog.PrintCanvas();
+                case 1:
+                    Console.Clear();
+                    Game gameOne = new Game();
+                    gameOne.PlayGame();
+                    return;
 
+                case 2:
+                    Console.WriteLine("help");
+                    Console.ReadKey();
+                    return;
 
-                Console.WriteLine("enter row numer: ");
-                int rowToShoot = int.Parse(Console.ReadLine());
-                Console.WriteLine("enter col number: ");
-                int colToShoot = int.Parse(Console.ReadLine());
-
-                //FIXA shoot så att man får skjuta igen om positionen redan träffats
-                Shoot(player1, rowToShoot, colToShoot);
-
-
-                Console.WriteLine("Press any key to continue or ESC to close.");
-                var key = Console.ReadKey();
-                if (key.Key == ConsoleKey.Escape)
-                {
-                    Console.WriteLine("Good bye!");
-                    Environment.Exit(0);
-                }
-                Console.Clear();
-
+                default:
+                    Console.WriteLine("fel");
+                    break;
             }
-
-
-
         }
-
+        /*
         static bool Shoot(Player onName, int row, int col)
         {
             if (onName.ShootingLog.ValidateShot(row, col)) //Returnerar true om positionen inte har beskjutits tidigare
@@ -89,6 +65,6 @@ namespace sänkaskepp
             
 
         }
-
+        */
     }
 }

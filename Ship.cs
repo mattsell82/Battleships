@@ -6,9 +6,9 @@ namespace sänkaskepp
 {
     public class Ship
     {
-        public int Id;
-        public int ShipLength;
-        public string ShipType;
+        public int Id { get; set; }
+        public int ShipLength { get; set; }
+        public string ShipType { get; set; }
 
         public Ship(int id, int shipLength)
         {
@@ -33,9 +33,11 @@ namespace sänkaskepp
             }
         }
 
-        public int GetShipId()
+        /*
+        public string GetShipType()
         {
-            return Id;
+            return ShipType;
         }
+        */
     }
 }

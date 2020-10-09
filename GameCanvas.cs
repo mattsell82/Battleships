@@ -13,7 +13,7 @@ namespace sänkaskepp
         int[] CoordinatesX { get; set; }
         string[] CoordinatesY { get; set; }
         public List<Ship> Ships { get; set; }
-        int[,] Canvas { get; set; }
+        public int[,] Canvas { get; set; }
 
 
         public GameCanvas()
@@ -22,10 +22,7 @@ namespace sänkaskepp
             this.CoordinatesX = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             this.CoordinatesY = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
             this.Canvas = new int[10, 10];         
-;
-
         }
-
 
         //FindPosition används av AddShip för att hitta en ledig båtplacering
         public int[] FindPosition(int shipLength, int shipOrientation, int shipId)
@@ -193,14 +190,14 @@ namespace sänkaskepp
 
         }
 
-        public int Score()
+        public int GetScore()
         {
             int score = 0;
             for (int row = 0; row < Canvas.GetLength(0); row++)
             {
                 for (int col = 0; col < Canvas.GetLength(1); col++)
                 {
-                    if (Canvas[row, col] != 0)
+                    if (Canvas[row, col] != 0 && Canvas[row, col] != 9)
                     {
                         score += 1;
                     }

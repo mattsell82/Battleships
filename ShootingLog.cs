@@ -4,11 +4,11 @@ using System.Text;
 
 namespace sänkaskepp
 {
-    class ShootingLog
+    public class ShootingLog
     {
-        int[] CoordinatesX { get; set; }
-        string[] CoordinatesY { get; set; }
-        int[,] Canvas { get; set; }
+        public int[] CoordinatesX { get; set; }
+        public string[] CoordinatesY { get; set; }
+        public int[,] Canvas { get; set; }
 
         public ShootingLog()
         {
