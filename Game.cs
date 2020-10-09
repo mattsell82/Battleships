@@ -22,9 +22,10 @@ namespace sänkaskepp
 
         public void PlayGame()
         {
+            bool playGame = true;
             Random randomGenerator = new Random();
             Console.Clear();
-            while (true)
+            while (playGame)
             {
                 Console.WriteLine($"{Human.Name} score: \t\t{16 - Computer.GameCanvas.GetScore()}");
                 Console.WriteLine($"Computers score: \t{16 - Human.GameCanvas.GetScore()}");
@@ -32,7 +33,7 @@ namespace sänkaskepp
                 Human.ShootingLog.PrintCanvas();
 
 
-                if (Turn) //Human = 0 
+                if (Turn) //Human = true  
                 {
                     Console.WriteLine($"Your turn!");
                     int rowToShoot = GetCoordinate("Enter row: ");
@@ -46,12 +47,11 @@ namespace sänkaskepp
                     var key = Console.ReadKey();
                     if (key.Key == ConsoleKey.Escape)
                     {
-                        Console.WriteLine("Good bye!");
-                        Environment.Exit(0);
+                        playGame = false;
                     }
 
                 }
-                else
+                else //om false är det datorns tur
                 {
                     int randomRow = randomGenerator.Next(0, 10);
                     int randomCol = randomGenerator.Next(0, 10);
@@ -71,16 +71,16 @@ namespace sänkaskepp
 
             static int GetCoordinate(string message)
             {
-                int parsedOutput = 0;
+                int parsedCoordinate = 0;
                 bool isNumerical = false;
 
-                while (isNumerical == false || parsedOutput < 0 || parsedOutput > 9)
+                while (isNumerical == false || parsedCoordinate < 0 || parsedCoordinate > 9)
                 {
                     Console.Write(message);
-                    isNumerical = int.TryParse(Console.ReadLine(), out parsedOutput);
+                    isNumerical = int.TryParse(Console.ReadLine(), out parsedCoordinate);
                 }
 
-                return parsedOutput;
+                return parsedCoordinate;
             }
 
             static bool Shoot(Player attacker, Player target, int row, int col)
@@ -99,7 +99,7 @@ namespace sänkaskepp
                     {
                         attacker.ShootingLog.MarkShot(row, col, false);
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Sorry you missed!");
+                        Console.WriteLine("Shot missed!");
                         Console.ForegroundColor = ConsoleColor.White;
                     }
 

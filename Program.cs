@@ -10,61 +10,55 @@ namespace sänkaskepp
     {
         static void Main(string[] args)
         {
+            bool menuLoop = true;
+            while (menuLoop)
+	        {
+                Console.WriteLine("Välkommen till till sänkaskepp!");
 
-            Console.WriteLine("Välkommen till till sänkaskepp!");
+                Console.WriteLine("Du kan göra följande val:");
+                Console.WriteLine("1. För att börja spela");
+                Console.WriteLine("2. För att få hjälp");
+                Console.WriteLine("3. För att avsluta\n");
 
-            Console.WriteLine("Du kan göra följande val:");
-            Console.WriteLine("1. För att börja spela");
-            Console.WriteLine("2. För att få hjälp");
-            int choice = int.Parse(Console.ReadLine());
-
-            
-
-            switch (choice)
-            {
-                case 1:
-                    Console.Clear();
-                    Game gameOne = new Game();
-                    gameOne.PlayGame();
-                    return;
-
-                case 2:
-                    Console.WriteLine("help");
-                    Console.ReadKey();
-                    return;
-
-                default:
-                    Console.WriteLine("fel");
-                    break;
-            }
-        }
-        /*
-        static bool Shoot(Player onName, int row, int col)
-        {
-            if (onName.ShootingLog.ValidateShot(row, col)) //Returnerar true om positionen inte har beskjutits tidigare
-            {
-                if (onName.GameCanvas.ReceiveShot(row, col) > 0) //Returnerar id från den ruta som träffas, 0 = miss.
+                Console.Write("Ange en siffra 1-3 och tryck enter: ");
+                if (Int32.TryParse(Console.ReadLine(), out int menuChoice))
                 {
-                    Console.WriteLine("Shot was hit!");
-                    onName.ShootingLog.MarkShot(row, col, true);
-                    //lägg till funktion för att ta bort en plupp hälsa från det träffade fartyget i listan ships.
+
+                    switch (menuChoice)
+                    {
+                        case 1:
+                            Console.Clear();
+                            Game gameOne = new Game();
+                            gameOne.PlayGame();
+                            menuLoop = true;
+                            break;
+
+                        case 2:
+                            Console.Clear();
+                            Console.WriteLine("help");
+                            Console.ReadKey();
+                            menuLoop = true;
+                            break;
+
+                        case 3:
+                            Console.WriteLine("Avslutar");
+                            menuLoop = false;
+                            break;
+
+                        default:
+                            Console.WriteLine("Please enter a valid choice from the menu.");
+                            menuLoop = true;
+                            break;
+                    }
                 }
                 else
                 {
-                    onName.ShootingLog.MarkShot(row, col, false);
-                    Console.WriteLine("Sorry you missed!");
+                    Console.WriteLine("Please enter a valid choice from the menu.");
                 }
 
-                return true; //returnerar true om det gick att skjuta
-            }
-            else
-            {
-                Console.WriteLine("This position has already been shot");
-                return false; //returnerar false om det inte gick att skjuta
-            }
-            
 
+                Console.Clear();
+            }
         }
-        */
     }
 }
