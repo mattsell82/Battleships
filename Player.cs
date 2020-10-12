@@ -17,12 +17,12 @@ namespace sänkaskepp
             this.ShootingLog = new ShootingLog();
 
             GameCanvas.AddShip(1, 1);
-            GameCanvas.AddShip(1, 2);
-            GameCanvas.AddShip(2, 3);
-            GameCanvas.AddShip(2, 4);
-            GameCanvas.AddShip(3, 5);
-            GameCanvas.AddShip(3, 6);
-            GameCanvas.AddShip(4, 7);
+            GameCanvas.AddShip(2, 1);
+            GameCanvas.AddShip(3, 2);
+            GameCanvas.AddShip(4, 2);
+            GameCanvas.AddShip(5, 3);
+            GameCanvas.AddShip(6, 3);
+            GameCanvas.AddShip(7, 4);
         }
         /*
         public void PrintShipType(int shipid)

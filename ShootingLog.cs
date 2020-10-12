@@ -21,12 +21,12 @@ namespace sänkaskepp
         {
             if (Canvas[row, col] > 0)
             {
-                return false;
+                return false;  //returnerar false om positionen redan har beskjutits
             }
             else
             {
 
-                return true;
+                return true; //returnerar true om positionen inte beskjutits tidigare
             }
         }
 

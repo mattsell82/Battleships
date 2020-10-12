@@ -96,13 +96,13 @@ namespace sänkaskepp
 
         }
 
-        //AddShip används för att lägga till båtobjekt i listan Ships sa
-        public void AddShip(int shipLength, int shipId)
+        //AddShip används för att lägga till objekt av klassen Ship i listan Ships
+        public void AddShip(int shipId, int shipLength)
         {
             Debug.WriteLine($"-------Adding ShipId {shipId} with length {shipLength}------------");
 
             //Lägger till båtobjektet i listan Ships
-            this.Ships.Add(new Ship(shipLength, shipId));
+            this.Ships.Add(new Ship(shipId, shipLength));
 
             //slumpar fram shipOrientation. 0 = horisontellt dvs. liggande båt, 1 = vertikalt dvs. stående båt
             Random randomGenerator = new Random();
@@ -134,7 +134,7 @@ namespace sänkaskepp
 
         }
 
-        public void PrintCanvas()
+        public void PrintCanvas() //Skriver ut spelplanen och koordinaterna
         {
             Console.Write("  ");
             for (int i = 0; i < CoordinatesX.Length; i++)
@@ -190,7 +190,7 @@ namespace sänkaskepp
 
         }
 
-        public int GetScore()
+        public int GetScore() //summerar hur många rutor med båtar som finns kvar på planen
         {
             int score = 0;
             for (int row = 0; row < Canvas.GetLength(0); row++)
@@ -207,7 +207,29 @@ namespace sänkaskepp
             return score;
         }
 
-        public int ReceiveShot(int row, int col)
+        public int GetMaxScore() // Returnerar maxpoäng baserat på hur mång båtar som finns i listan.
+        {
+            int maxScore = 0;
+            for (int i = 0; i < Ships.Count; i++)
+            {
+                maxScore += Ships[i].ShipLength;
+            }
+           return maxScore;
+        }
+
+        public int GetHits()
+        {
+            int totalHits = 0;
+            for (int i = 0; i < Ships.Count; i++)
+            {
+                totalHits += Ships[i].Hits;
+            }
+            return totalHits;
+
+        }
+
+
+        public int ReceiveShot(int row, int col) //Markerar träff i Canvas
         {
             int result = this.Canvas[row, col];
             if (result != 0)
@@ -217,5 +239,30 @@ namespace sänkaskepp
 
             return result; //Returnerar id på det skepp som träffades
         }
+
+
+        public void MarkShotOnShip(int shipId)
+        {
+            for (int i = 0; i < Ships.Count; i++)
+            {
+
+                if (Ships[i].Id == shipId)
+                {
+
+                    Ships[i].Hits++;
+
+                    //Console.WriteLine($"A { Ships[i].ShipType} was hit!");
+
+                    if (Ships[i].Hits == Ships[i].ShipLength)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine($"A {Ships[i].ShipType} was destroyed!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+
+                }
+            }
+        }
+
     }
 }

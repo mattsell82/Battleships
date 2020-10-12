@@ -13,14 +13,14 @@ namespace sänkaskepp
             bool menuLoop = true;
             while (menuLoop)
 	        {
-                Console.WriteLine("Välkommen till till sänkaskepp!");
+                Console.WriteLine(
+                    "Välkommen till till sänkaskepp!\n\n" +
+                    "Du kan nu göra följande val:\n" +
+                    "1. För att börja sepla\n" +
+                    "2. För att få hjälp\n" +
+                    "3. För att avsluta\n\n" +
+                    "Ange en siffra 1-3 och tryck enter: ");
 
-                Console.WriteLine("Du kan göra följande val:");
-                Console.WriteLine("1. För att börja spela");
-                Console.WriteLine("2. För att få hjälp");
-                Console.WriteLine("3. För att avsluta\n");
-
-                Console.Write("Ange en siffra 1-3 och tryck enter: ");
                 if (Int32.TryParse(Console.ReadLine(), out int menuChoice))
                 {
 

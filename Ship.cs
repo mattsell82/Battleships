@@ -9,9 +9,11 @@ namespace sänkaskepp
         public int Id { get; set; }
         public int ShipLength { get; set; }
         public string ShipType { get; set; }
+        public int Hits { get; set; }
 
         public Ship(int id, int shipLength)
         {
+            this.Hits = 0;
             this.Id = id;
             this.ShipLength = shipLength;
 
@@ -33,11 +35,5 @@ namespace sänkaskepp
             }
         }
 
-        /*
-        public string GetShipType()
-        {
-            return ShipType;
-        }
-        */
     }
 }
