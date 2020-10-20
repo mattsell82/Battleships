@@ -57,7 +57,7 @@ namespace sänkaskepp
                     while (!shotOk)
                     {
                         Console.WriteLine($"Your turn!");
-                        int rowToShoot = GetCoordinate("Enter row: ");
+                        int rowToShoot = GetRow("Enter row: ");
                         int colToShoot = GetCoordinate("Enter col: ");
 
                         shotOk = Shoot(Human, Computer, rowToShoot, colToShoot);
@@ -76,14 +76,13 @@ namespace sänkaskepp
                 {
                     while (!shotOk)
                     {
-                        int randomRow = randomGenerator.Next(0, 10);
-                        int randomCol = randomGenerator.Next(0, 10);
+                        int[] target = Computer.GameCanvas.RandomCoordinate();
 
                         Console.WriteLine("Computers turn!");
-                        Thread.Sleep(500);
-                        Console.WriteLine($"Computer shooting at row: {randomRow} col: {randomCol}");
-                        Thread.Sleep(500);
-                        shotOk = Shoot(Computer, Human, randomRow, randomCol);
+                        Thread.Sleep(100);
+                        Console.WriteLine($"Computer shooting at row: {target[0]} col: {target[1]}");
+                        Thread.Sleep(100);
+                        shotOk = Shoot(Computer, Human, target[0], target[1]);
                     }
 
                     Turn = true;
@@ -96,6 +95,33 @@ namespace sänkaskepp
 
         }
 
+
+        static int GetRow(string message)
+        {
+            string input = "";
+
+            Dictionary<string, int> RowValues = new Dictionary<string, int>()
+            {
+            {"A", 0 },
+            {"B", 1 },
+            {"C", 2 },
+            {"D", 3 },
+            {"E", 4 },
+            {"F", 5 },
+            {"G", 6 },
+            {"H", 7 },
+            {"I", 8 },
+            {"J", 9 },
+            };
+
+            while (!RowValues.ContainsKey(input))
+            {
+                Console.Write(message);
+                input = Console.ReadLine().ToUpper();
+            }
+            return RowValues[input];
+
+        }
 
 
         static int GetCoordinate(string message)
@@ -121,7 +147,7 @@ namespace sänkaskepp
                 if (PositionResult > 0) //Id från den ruta som träffas, 0 = miss.
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Target hit!");
+                    Console.WriteLine("Target hit!\a");
                     Console.ForegroundColor = ConsoleColor.White;
                     
                     target.GameCanvas.MarkShotOnShip(PositionResult); // lägger till en träff på det fartyg som träffats.

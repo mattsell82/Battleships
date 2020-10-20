@@ -10,19 +10,52 @@ namespace sänkaskepp
 {
     public class GameCanvas
     {
-        int[] CoordinatesX { get; set; }
-        string[] CoordinatesY { get; set; }
+        int[] AxisX { get; set; }
+        string[] AxisY { get; set; }
         public List<Ship> Ships { get; set; }
+        public List<int[]> Coordinates { get; set; }
         public int[,] Canvas { get; set; }
+        Random Randomizer { get; set; }
 
 
         public GameCanvas()
         {
             this.Ships = new List<Ship>();
-            this.CoordinatesX = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            this.CoordinatesY = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
-            this.Canvas = new int[10, 10];         
+            this.AxisX = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            this.AxisY = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
+            this.Canvas = new int[10, 10];
+            Randomizer = new Random();
+            this.Coordinates = new List<int[]>();
+            AddCoordinates();
         }
+
+        void AddCoordinates()
+        {
+            for (int row = 0; row < 10; row++)
+            {
+                for (int col = 0; col < 10; col++)
+                {
+                    Coordinates.Add(new int[2] { row, col });
+                }
+            }
+        }
+
+        public int[] RandomCoordinate()
+        {
+            int limit = Coordinates.Count;
+            if (limit > 0)
+            {
+                int randomIndex = Randomizer.Next(0, limit);
+                int[] outPut = Coordinates[randomIndex];
+                Coordinates.RemoveAt(randomIndex);
+                return outPut;
+            }
+            else
+            {
+                return new int[] { -1, -1 };
+            }
+        }
+
 
         //FindPosition används av AddShip för att hitta en ledig båtplacering
         public int[] FindPosition(int shipLength, int shipOrientation, int shipId)
@@ -137,10 +170,10 @@ namespace sänkaskepp
         public void PrintCanvas() //Skriver ut spelplanen och koordinaterna
         {
             Console.Write("  ");
-            for (int i = 0; i < CoordinatesX.Length; i++)
+            for (int i = 0; i < AxisX.Length; i++)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write($"{CoordinatesX[i], 3}");
+                Console.Write($"{AxisX[i], 3}");
                 Console.ForegroundColor = ConsoleColor.White;
             }
             Console.WriteLine(string.Empty);
@@ -149,7 +182,7 @@ namespace sänkaskepp
             for (int row = 0; row < Canvas.GetLength(0); row++)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write($"{CoordinatesY[row],3}");
+                Console.Write($"{AxisY[row],3}");
                 Console.ForegroundColor = ConsoleColor.White;
 
                 for (int col = 0; col <Canvas.GetLength(1); col++)

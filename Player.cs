@@ -23,6 +23,7 @@ namespace sänkaskepp
             GameCanvas.AddShip(5, 3);
             GameCanvas.AddShip(6, 3);
             GameCanvas.AddShip(7, 4);
+
         }
         /*
         public void PrintShipType(int shipid)
