@@ -4,9 +4,9 @@ using System.Text;
 
 namespace sänkaskepp
 {
-    public class Ship
+    public class Ship : IShip
     {
-        public int Id { get; set; }
+        public int ShipId { get; set; }
         public int ShipLength { get; set; }
         public string ShipType { get; set; }
         public int Hits { get; set; }
@@ -14,7 +14,7 @@ namespace sänkaskepp
         public Ship(int id, int shipLength)
         {
             this.Hits = 0;
-            this.Id = id;
+            this.ShipId = id;
             this.ShipLength = shipLength;
 
             if (shipLength == 1)

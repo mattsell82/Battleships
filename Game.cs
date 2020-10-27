@@ -8,30 +8,48 @@ namespace sänkaskepp
 {
     class Game
     {        
-        public Player Computer { get; set; }
-        public Player Human { get; set; }
+        public IPlayer Computer { get; set; }
+        public IPlayer Human { get; set; }
         public bool Turn { get; set; }
 
         public Game()
         {
             this.Turn = true;
-            this.Computer = new Player("Computer");
+            this.Computer = new Player("Computer", new ShipGrid(), new LogGrid());
             Console.WriteLine("Please enter your name:");
-            this.Human = new Player(Console.ReadLine());
+            this.Human = new Player(Console.ReadLine(), new ShipGrid(), new LogGrid());
+
+            Human.ShipGrid.AddShip(new Ship(1, 1));
+            Human.ShipGrid.AddShip(new Ship(2, 1));
+            Human.ShipGrid.AddShip(new Ship(3, 2));
+            Human.ShipGrid.AddShip(new Ship(4, 2));
+            Human.ShipGrid.AddShip(new Ship(5, 3));
+            Human.ShipGrid.AddShip(new Ship(6, 3));
+            Human.ShipGrid.AddShip(new Ship(7, 4));
+
+            Computer.ShipGrid.AddShip(new Ship(1, 1));
+            Computer.ShipGrid.AddShip(new Ship(2, 1));
+            Computer.ShipGrid.AddShip(new Ship(3, 2));
+            Computer.ShipGrid.AddShip(new Ship(4, 2));
+            Computer.ShipGrid.AddShip(new Ship(5, 3));
+            Computer.ShipGrid.AddShip(new Ship(6, 3));
+            Computer.ShipGrid.AddShip(new Ship(7, 4));
+
+
         }
 
         public void PlayGame()
         {
             Random randomGenerator = new Random();
-            int maxScore = Human.GameCanvas.GetMaxScore();
+            int maxScore = Human.ShipGrid.GetMaxScore();
             int scoreHuman = 0;
             int scoreComputer = 0;
 
             Console.Clear();
             while (true)
             {
-                scoreHuman = Computer.GameCanvas.GetHits();
-                scoreComputer = Human.GameCanvas.GetHits();
+                scoreHuman = Computer.ShipGrid.GetHits();
+                scoreComputer = Human.ShipGrid.GetHits();
 
                 if (scoreHuman == maxScore)
                 {
@@ -48,8 +66,8 @@ namespace sänkaskepp
 
                 Console.WriteLine($"{Human.Name} score: \t\t{scoreHuman} / {maxScore}");
                 Console.WriteLine($"Computers score: \t{scoreComputer} / {maxScore}");
-                Human.GameCanvas.PrintCanvas();
-                Human.ShootingLog.PrintCanvas();
+                Human.ShipGrid.PrintGrid();
+                Human.LogGrid.PrintGrid();
 
                 bool shotOk = false;
                 if (Turn) //Human = true  
@@ -76,7 +94,7 @@ namespace sänkaskepp
                 {
                     while (!shotOk)
                     {
-                        int[] target = Computer.GameCanvas.RandomCoordinate();
+                        int[] target = Computer.LogGrid.RandomCoordinate();
 
                         Console.WriteLine("Computers turn!");
                         Thread.Sleep(100);
@@ -138,26 +156,26 @@ namespace sänkaskepp
             return parsedCoordinate;
         }
 
-        static bool Shoot(Player attacker, Player target, int row, int col)
+        static bool Shoot(IPlayer attacker, IPlayer target, int row, int col)
         {
-            int PositionResult = target.GameCanvas.ReceiveShot(row, col); // 0 = hav. > 0 == båtid.
+            int PositionResult = target.ShipGrid.MarkIncomingShot(row, col); // 0 = hav. > 0 == båtid.
 
-            if (attacker.ShootingLog.ValidateShot(row, col)) //Returnerar true om positionen inte har beskjutits tidigare
+            if (attacker.LogGrid.ValidateShot(row, col)) //Returnerar true om positionen inte har beskjutits tidigare
             {
-                if (PositionResult > 0) //Id från den ruta som träffas, 0 = miss.
+                if (PositionResult > 0) //ShipId från den ruta som träffas, 0 = miss.
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Target hit!\a");
                     Console.ForegroundColor = ConsoleColor.White;
                     
-                    target.GameCanvas.MarkShotOnShip(PositionResult); // lägger till en träff på det fartyg som träffats.
+                    target.ShipGrid.MarkShotOnShip(PositionResult); // lägger till en träff på det fartyg som träffats.
 
-                    attacker.ShootingLog.MarkShot(row, col, true);
+                    attacker.LogGrid.MarkShot(row, col, true);
                     //TODO lägg till funktion för att ta bort en enhet hälsa från det träffade fartyget i listan ships.
                 }
                 else
                 {
-                    attacker.ShootingLog.MarkShot(row, col, false);
+                    attacker.LogGrid.MarkShot(row, col, false);
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Shot missed!");
                     Console.ForegroundColor = ConsoleColor.White;
