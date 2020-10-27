@@ -14,7 +14,7 @@ namespace sänkaskepp
             while (menuLoop)
 	        {
                 Console.WriteLine(
-                    "Välkommen till till sänkaskepp!\n\n" +
+                    "Välkommen till sänkaskepp!\n\n" +
                     "Du kan nu göra följande val:\n" +
                     "1. För att börja sepla\n" +
                     "2. För att få hjälp\n" +

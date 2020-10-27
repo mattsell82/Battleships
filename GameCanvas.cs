@@ -46,9 +46,9 @@ namespace sänkaskepp
             if (limit > 0)
             {
                 int randomIndex = Randomizer.Next(0, limit);
-                int[] outPut = Coordinates[randomIndex];
+                int[] output = Coordinates[randomIndex];
                 Coordinates.RemoveAt(randomIndex);
-                return outPut;
+                return output;
             }
             else
             {
@@ -62,19 +62,18 @@ namespace sänkaskepp
         {
             
             //beräknar koordinater baserat på båtens längd och shipOrientation (0 = horisontell / 1 = vertikal)
-            Random randomGenerator = new Random();
             int row;
             int col;
 
             if (shipOrientation == 0)
             {
-                row = randomGenerator.Next(10);
-                col = randomGenerator.Next(11 - shipLength);
+                row = Randomizer.Next(10);
+                col = Randomizer.Next(11 - shipLength);
             }
             else
             {
-                row = randomGenerator.Next(11 - shipLength);
-                col = randomGenerator.Next(10);
+                row = Randomizer.Next(11 - shipLength);
+                col = Randomizer.Next(10);
             }
 
 
@@ -138,8 +137,7 @@ namespace sänkaskepp
             this.Ships.Add(new Ship(shipId, shipLength));
 
             //slumpar fram shipOrientation. 0 = horisontellt dvs. liggande båt, 1 = vertikalt dvs. stående båt
-            Random randomGenerator = new Random();
-            int shipOrientation = randomGenerator.Next(2);
+            int shipOrientation = Randomizer.Next(2);
 
             int[] pos = FindPosition(shipLength, shipOrientation, shipId);
 
