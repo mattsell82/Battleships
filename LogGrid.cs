@@ -4,10 +4,16 @@ using System.Text;
 
 namespace sänkaskepp
 {
-    public class LogGrid : Grids, ILogGrid
+    public interface ILogGrid : IGrids
     {
+        void LogShot(int row, int col, bool status);
+        int[] RandomCoordinate(); 
+        bool ValidateShot(int row, int col);
+    }
 
-        public List<int[]> Coordinates { get; set; }
+    public class LogGrid : Grids, ILogGrid //LogGrid används för att hålla reda på de skott man själv skjuter
+    {
+        public List<int[]> Coordinates { get; } //Datorspelarens slumpade skott plockas från denna lista
 
         public LogGrid()
         {
@@ -55,11 +61,11 @@ namespace sänkaskepp
             }
         }
 
-        public void MarkShot(int row, int col, bool status) //Markerar skottet i grid
+        public void LogShot(int row, int col, bool status) //Markerar skottet i grid
         {
             if (status == true)
             {
-                Grid[row, col] = 8; //Träff markeras med 2
+                Grid[row, col] = 8; //Träff markeras med 8
             }
             else
             {

@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Cryptography;
 
 namespace sänkaskepp
 {
+    public interface IGrids
+    {
+        void PrintGrid(IGraphics gui);
+    }
 
-    public abstract class Grids : IGrids
+    public abstract class Grids : IGrids //Denna klass är abstrakt och ärvs av klasserna ShipGrid och LogGrid
     {
         int[] AxisX { get; }
         string[] AxisY { get; }
-
         public int[,] Grid { get; set; }
         public Random Randomizer { get; set; }
-
 
         public Grids()
         {
@@ -22,67 +25,27 @@ namespace sänkaskepp
             this.Randomizer = new Random();
         }
 
-        public void PrintGrid() //Skriver ut spelplanen och koordinaterna
+
+        public void PrintGrid(IGraphics colorWriter) //Skriver ut spelplanen och koordinaterna
         {
-            Console.Write("  ");
+            Console.Write($"\t{" ", 2}");
             for (int i = 0; i < AxisX.Length; i++)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write($"{AxisX[i],3}");
-                Console.ForegroundColor = ConsoleColor.White;
+                colorWriter.PrintColorString("green", $"{AxisX[i], 3}");
             }
-            Console.WriteLine(string.Empty);
+            Console.Write("\n");
 
             for (int row = 0; row < Grid.GetLength(0); row++)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write($"{AxisY[row],3}");
-                Console.ForegroundColor = ConsoleColor.White;
+                colorWriter.PrintColorString("green", $"\t{AxisY[row], 2}");
 
                 for (int col = 0; col < Grid.GetLength(1); col++)
                 {
-                    if (Grid[row, col] == 0 || Grid[row, col] == 9)
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write($"{Grid[row, col],2} ");
-                    }
-                    else if (Grid[row, col] == 1 || Grid[row, col] == 2)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write($"{Grid[row, col],2} ");
-                    }
-                    else if (Grid[row, col] == 3 || Grid[row, col] == 4)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write($"{Grid[row, col],2} ");
-                    }
-                    else if (Grid[row, col] == 5 || Grid[row, col] == 6)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write($"{Grid[row, col],2} ");
-                    }
-                    else if (Grid[row, col] == 8)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Magenta;
-                        Console.Write($"{Grid[row, col],2} ");
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.Write($"{Grid[row, col],2} ");
-                    }
-                    Console.ForegroundColor = ConsoleColor.White;
-
+                    colorWriter.PrintColorGrid(Grid[row, col], 3);
                 }
                 Console.WriteLine(string.Empty);
 
             }
-
-
-
         }
-
-
-
     }
 }

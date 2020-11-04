@@ -1,104 +1,126 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
 
 namespace sänkaskepp
 {
     class Game
     {        
-        public IPlayer Computer { get; set; }
-        public IPlayer Human { get; set; }
+        public IPlayer Computer { get; }
+        public IPlayer Human { get; }
         public bool Turn { get; set; }
+        IGraphics ColorWriter { get; }
 
-        public Game()
+        public Game(IGraphics colorWriter)
         {
+            this.ColorWriter = colorWriter;
             this.Turn = true;
-            this.Computer = new Player("Computer", new ShipGrid(), new LogGrid());
-            Console.WriteLine("Please enter your name:");
-            this.Human = new Player(Console.ReadLine(), new ShipGrid(), new LogGrid());
-
-            Human.ShipGrid.AddShip(new Ship(1, 1));
-            Human.ShipGrid.AddShip(new Ship(2, 1));
-            Human.ShipGrid.AddShip(new Ship(3, 2));
-            Human.ShipGrid.AddShip(new Ship(4, 2));
-            Human.ShipGrid.AddShip(new Ship(5, 3));
-            Human.ShipGrid.AddShip(new Ship(6, 3));
-            Human.ShipGrid.AddShip(new Ship(7, 4));
-
-            Computer.ShipGrid.AddShip(new Ship(1, 1));
-            Computer.ShipGrid.AddShip(new Ship(2, 1));
-            Computer.ShipGrid.AddShip(new Ship(3, 2));
-            Computer.ShipGrid.AddShip(new Ship(4, 2));
-            Computer.ShipGrid.AddShip(new Ship(5, 3));
-            Computer.ShipGrid.AddShip(new Ship(6, 3));
-            Computer.ShipGrid.AddShip(new Ship(7, 4));
-
+            this.Computer = new Player("Computer", new ShipGrid(), new LogGrid()); //instantierar datorspelaren och dess grids
+            Console.Write("\tPlease enter your name: ");
+            this.Human = new Player(Console.ReadLine(), new ShipGrid(), new LogGrid()); //instantierar den mänskliga spelaren och dess grids
+            InstantiateShips();
 
         }
 
-        public void PlayGame()
+        public void InstantiateShips() //Lägger till alla skepp
         {
-            Random randomGenerator = new Random();
-            int maxScore = Human.ShipGrid.GetMaxScore();
+            int[] ships = { 2, 2, 2, 1, }; //Arrayens index + 1 = båtens längd. Värdena i arrayen = antal båtar av en viss längd.
+            int id = 1;
+            for (int i = 0; i < ships.Length; i++)
+            {
+                for (int j = 0; j < ships[i]; j++)
+                {
+                    Human.ShipGrid.AddShip(new Ship(id, i + 1));
+                    Computer.ShipGrid.AddShip(new Ship(id, i + 1));
+                    id++;
+                }
+            }
+        }
+
+        public void PlayGame() //Denna metod sköter allt game-play. Dvs. poängräkning, turordning osv.
+        {
+            int maxScoreHuman = Computer.ShipGrid.GetMaxScore();
+            int maxScoreComputer = Human.ShipGrid.GetMaxScore();
             int scoreHuman = 0;
             int scoreComputer = 0;
 
             Console.Clear();
-            while (true)
+            while (true)  //Game loop, körs tills någon vinner eller tills användaren avslutar
             {
-                scoreHuman = Computer.ShipGrid.GetHits();
-                scoreComputer = Human.ShipGrid.GetHits();
+                scoreHuman = Computer.ShipGrid.GetHitsTotal();
+                scoreComputer = Human.ShipGrid.GetHitsTotal();
 
-                if (scoreHuman == maxScore)
+                if (scoreHuman == maxScoreHuman) //Kollar om den mänskliga spelaren har vunnit
                 {
-                    Console.WriteLine("Congratulations you won!\n");
+                    ColorWriter.PrintVictoryGraphic();
+                    Console.WriteLine("n\tYour enemy has been defeated!\n");
                     Console.ReadKey();
                     break;
                 }
-                else if (scoreComputer == maxScore)
+                else if (scoreComputer == maxScoreHuman) //Kollar om dator-spelaren har vunnit
                 {
-                    Console.WriteLine("Sorry you lost!");
+                    ColorWriter.PrintDefeatGraphic();
+                    Console.WriteLine("\n\tYou have been defeated!");
                     Console.ReadKey();
                     break;
                 }
 
-                Console.WriteLine($"{Human.Name} score: \t\t{scoreHuman} / {maxScore}");
-                Console.WriteLine($"Computers score: \t{scoreComputer} / {maxScore}");
-                Human.ShipGrid.PrintGrid();
-                Human.LogGrid.PrintGrid();
+                //Skriver ut poäng
+                Console.WriteLine("\t----------------------");
+                Console.WriteLine($"\t{Human.Name + " score:",-25}{scoreHuman} / {maxScoreHuman}");
+                Console.WriteLine($"\t{"Computers score:",-25}{scoreComputer} / {maxScoreComputer}");
+                Console.WriteLine("\t----------------------");
 
+                //Skriver ut spelplanen
+                Console.WriteLine("\tYour ships: ");
+                Human.ShipGrid.PrintGrid(ColorWriter);
+                Console.WriteLine("\n\tYour shots: ");
+                Human.LogGrid.PrintGrid(ColorWriter);
+                
+
+                //Påbörjar eldgivning
                 bool shotOk = false;
-                if (Turn) //Human = true  
+                if (Turn) //Om Turn = true är det människans tur  
                 {
-                    while (!shotOk)
+                    while (!shotOk) //Upprepas tills att avändaren skjuter ett giltigt skott
                     {
-                        Console.WriteLine($"Your turn!");
-                        int rowToShoot = GetRow("Enter row: ");
-                        int colToShoot = GetCoordinate("Enter col: ");
+                        Console.WriteLine($"\tYour turn!"); 
+                        int rowToShoot = GetRowInput("\tEnter row: ");
+                        int colToShoot = GetColInput("\tEnter col: ");
 
                         shotOk = Shoot(Human, Computer, rowToShoot, colToShoot);
                     }
                     Turn = false;  //Byter till motståndarens tur
 
-                    Console.WriteLine("Press any key to continue or ESC to close.");
-                    var key = Console.ReadKey();
-                    if (key.Key == ConsoleKey.Escape)
+                    Console.Write("\tPress enter to continue or -q to quit or -s for status: ");
+                    var command = Console.ReadLine().ToLower();
+
+                    //Möjlighet att avbryta spelet eller visa status
+                    if (command == "-q")  //Går tillbaka till huvudmenyn
                     {
                         break;
                     }
+                    else if (command == "-s") //Visar båtarnas status
+                    {
+                        Console.Clear();
+                        Human.ShipGrid.PrintStatus(Human.Name);
+                        Console.WriteLine();
+                        Computer.ShipGrid.PrintStatus(Computer.Name);
+                        Console.ReadKey();
+                    }
 
                 }
-                else //om false är det datorns tur
+                else //Om Turn = false är det datorns tur
                 {
                     while (!shotOk)
                     {
-                        int[] target = Computer.LogGrid.RandomCoordinate();
+                        int[] target = Computer.LogGrid.RandomCoordinate(); //Detta är den slumpade positionen som datorn skjuter.
 
-                        Console.WriteLine("Computers turn!");
+                        Console.WriteLine("\tComputers turn!");
                         Thread.Sleep(100);
-                        Console.WriteLine($"Computer shooting at row: {target[0]} col: {target[1]}");
+                        Console.WriteLine($"\tComputer shooting at row: {target[0]} col: {target[1]}");
                         Thread.Sleep(100);
                         shotOk = Shoot(Computer, Human, target[0], target[1]);
                     }
@@ -108,17 +130,14 @@ namespace sänkaskepp
                 }
 
                 Console.Clear();
-
             }
-
         }
 
-
-        static int GetRow(string message)
+        static int GetRowInput(string message) //Tar emot vilken rad som ska beskjutas
         {
             string input = "";
 
-            Dictionary<string, int> RowValues = new Dictionary<string, int>()
+            Dictionary<string, int> rowValues = new Dictionary<string, int>()
             {
             {"A", 0 },
             {"B", 1 },
@@ -132,19 +151,18 @@ namespace sänkaskepp
             {"J", 9 },
             };
 
-            while (!RowValues.ContainsKey(input))
+            while (!rowValues.ContainsKey(input))
             {
                 Console.Write(message);
                 input = Console.ReadLine().ToUpper();
             }
-            return RowValues[input];
 
+            return rowValues[input];
         }
 
-
-        static int GetCoordinate(string message)
+        static int GetColInput(string message) //Tar emot vilken kolumn som ska beskjutas
         {
-            int parsedCoordinate = 0;
+            int parsedCoordinate = -1;
             bool isNumerical = false;
 
             while (isNumerical == false || parsedCoordinate < 0 || parsedCoordinate > 9)
@@ -158,44 +176,37 @@ namespace sänkaskepp
 
         static bool Shoot(IPlayer attacker, IPlayer target, int row, int col)
         {
-            int PositionResult = target.ShipGrid.MarkIncomingShot(row, col); // 0 = hav. > 0 == båtid.
-
-            if (attacker.LogGrid.ValidateShot(row, col)) //Returnerar true om positionen inte har beskjutits tidigare
+            
+            if (attacker.LogGrid.ValidateShot(row, col)) //Om positionen inte beskjutits tidigare
             {
-                if (PositionResult > 0) //ShipId från den ruta som träffas, 0 = miss.
+                int PositionResult = target.ShipGrid.MarkIncomingShot(row, col); //Lagrar resultatet från skottet
+
+                if (PositionResult > 0) //Om en båt träffades
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Target hit!\a");
+                    Console.WriteLine("\tTarget hit!\a");
                     Console.ForegroundColor = ConsoleColor.White;
                     
-                    target.ShipGrid.MarkShotOnShip(PositionResult); // lägger till en träff på det fartyg som träffats.
+                    target.ShipGrid.AddHitToShip(PositionResult); //Lägger till en träff på det fartyg som träffats.
 
-                    attacker.LogGrid.MarkShot(row, col, true);
-                    //TODO lägg till funktion för att ta bort en enhet hälsa från det träffade fartyget i listan ships.
+                    attacker.LogGrid.LogShot(row, col, true); //Markerar skottet i LogGrid
                 }
-                else
+                else //Om skottet missade
                 {
-                    attacker.LogGrid.MarkShot(row, col, false);
+                    attacker.LogGrid.LogShot(row, col, false);
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Shot missed!");
+                    Console.WriteLine("\tShot missed!");
                     Console.ForegroundColor = ConsoleColor.White;
                 }
 
                 return true; //returnerar true om det gick att skjuta
             }
-            else
+            else //Om positionen redan har beskjutits
             {
-                Console.WriteLine("This position has already been shot");
+                Console.WriteLine("\tThis position has already been shot");
                 return false; //returnerar false om det inte gick att skjuta
             }
-        }
+        } //Skjuter ett skott
 
-
-        /*
-        public void PrintShipType(int shipid, string Name)
-        {
-            Computer.PrintShipType(shipid);
-        }
-        */
-	}
+    }
 }

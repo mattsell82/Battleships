@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Dynamic;
-using System.Linq;
-using System.Security.Cryptography;
 
 namespace sänkaskepp
 {
@@ -10,52 +6,55 @@ namespace sänkaskepp
     {
         static void Main(string[] args)
         {
+            IGraphics graphics = new Graphics(); //Provar att använda ett interface till klassen ColorWriter för att komma åt PrintColor-metoder, istället för att göra klassen static.
             bool menuLoop = true;
-            while (menuLoop)
-	        {
-                Console.WriteLine(
-                    "Välkommen till sänkaskepp!\n\n" +
-                    "Du kan nu göra följande val:\n" +
-                    "1. För att börja sepla\n" +
-                    "2. För att få hjälp\n" +
-                    "3. För att avsluta\n\n" +
-                    "Ange en siffra 1-3 och tryck enter: ");
+            while (menuLoop)  //Menyloopen snurrar tills programmet avslutas
+            {
 
-                if (Int32.TryParse(Console.ReadLine(), out int menuChoice))
+                graphics.PrintIntroGraphic(); //Skriver ut ascii-art
+
+                Console.Write(  //SKriver ut menyn
+                    "\n\tWelcome to Battleships!\n\n" +
+                    
+                    "\t1. Start game\n" +
+                    "\t2. Show help\n" +
+                    "\t3. Quit program\n\n" +
+                    "\tSelect option and press enter: ");
+
+
+                if (Int32.TryParse(Console.ReadLine(), out int menuChoice)) //Valiterar att inmatningen är ett heltal 
                 {
 
                     switch (menuChoice)
                     {
                         case 1:
                             Console.Clear();
-                            Game gameOne = new Game();
-                            gameOne.PlayGame();
-                            menuLoop = true;
+                            Game gameOne = new Game(graphics);  //Instansierar ett nytt spel
+                            gameOne.PlayGame(); //Kör spelet
                             break;
 
                         case 2:
                             Console.Clear();
-                            Console.WriteLine("help");
+                            Help help = new Help(graphics);  //bifogar graphics-objektet som argument till konstruktorn i klassen Help.
+                            help.PrintHelp(); // Visar hjälpavsnittet
                             Console.ReadKey();
-                            menuLoop = true;
                             break;
 
                         case 3:
-                            Console.WriteLine("Avslutar");
+                            Console.WriteLine("\tAvslutar");
                             menuLoop = false;
                             break;
 
                         default:
-                            Console.WriteLine("Please enter a valid choice from the menu.");
+                            Console.WriteLine("\tPlease enter a valid choice from the menu.");
                             menuLoop = true;
                             break;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Please enter a valid choice from the menu.");
+                    Console.WriteLine("\tPlease enter a valid choice from the menu.");
                 }
-
 
                 Console.Clear();
             }
